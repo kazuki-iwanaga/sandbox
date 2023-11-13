@@ -21,20 +21,32 @@ jobs:
       pull-requests: write
     environment: terraform
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Extract .terraform-version
-        run: |
-          echo "TF_VERSION=$(cat .terraform-version)" >> $GITHUB_ENV
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
 
       - name: gcloud auth
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
           service_account: ${{ secrets.GCP_SA }}@${{ secrets.GCP_PROJECT }}.iam.gserviceaccount.com
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: setup tfcmt
+        run: |
+          wget "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v$4.7.1/tfcmt_linux_amd64.tar.gz" -O /tmp/tfcmt.tar.gz
+          tar xzf /tmp/tfcmt.tar.gz -C /tmp
+          mv /tmp/tfcmt /usr/local/bin
+          tfcmt --version
+
+      - name: fmt
+        run: |
+          terraform fmt -check -recursive -diff
+
+      - name: terraform init
+        run: >
+          terraform init
+          -backend-config="bucket=${{ secrets.GCP_TF_BUCKET }}"
