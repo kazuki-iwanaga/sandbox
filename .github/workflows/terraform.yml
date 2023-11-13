@@ -24,6 +24,15 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: Extract .terraform-version
+        run: |
+          echo "TF_VERSION=$(cat .terraform-version)" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
       - name: gcloud auth
         uses: google-github-actions/auth@v1
         with:
