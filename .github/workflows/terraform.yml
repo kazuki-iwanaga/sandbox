@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-tokens: write
+      id-token: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
