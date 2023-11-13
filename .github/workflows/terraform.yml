@@ -12,12 +12,20 @@ defaults:
     working-directory: terraform
 
 jobs:
-  terraform-plan:
-    name: terraform-plan
+  terraform-fmt-plan:
+    name: terraform-fmt-plan
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
       pull-requests: write
+    environment: terraform
     steps:
-      - uses: actions/checkout@v4
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: gcloud auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA }}
