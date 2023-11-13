@@ -1,0 +1,23 @@
+name: terraform
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'terraform/**'
+
+defaults:
+  run:
+    working-directory: terraform
+
+jobs:
+  terraform-plan:
+    name: terraform-plan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-tokes: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
