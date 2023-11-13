@@ -8,6 +8,18 @@ resource "google_service_account" "github_actions" {
 
   project = var.project
 }
+
+resource "google_project_iam_member" "github_actions" {
+  for_each = toset([
+    "roles/storage.admin",
+    "roles/resourcemanager.projectIamAdmin",
+  ])
+
+  role   = each.value
+  member = "serviceAccount:${google_service_account.github_actions.email}"
+
+  project = var.project
+}
 # ==============================================================================
 
 # ==============================================================================
