@@ -1,0 +1,31 @@
+name: terraform
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'terraform/**'
+
+defaults:
+  run:
+    working-directory: terraform
+
+jobs:
+  terraform-fmt-plan:
+    name: terraform-fmt-plan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    environment: terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: ../.github/actions/terraform-setup.yml
+
+      - name: fmt
+        run: |
+          terraform fmt -check -recursive -diff
