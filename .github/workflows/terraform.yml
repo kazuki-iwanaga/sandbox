@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: ./.github/actions/terraform-setup.yml
+      - uses: ../.github/actions/terraform-setup.yml
 
       - name: fmt
         run: |
