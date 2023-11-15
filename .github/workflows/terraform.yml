@@ -21,7 +21,7 @@ jobs:
       pull-requests: write
     environment: terraform
     steps:
-      - uses: ../.github/actions/terraform-setup
+      - uses: .github/actions/terraform-setup
 
       - name: fmt
         run: |
